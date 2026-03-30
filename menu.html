@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bokachá - Menu</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+<body class="menu-page">
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <h1>Bokachá</h1>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            
+            <div class="mobile-nav-toggle">
+                <button class="mobile-menu-btn">☰</button>
+                <div class="mobile-nav-dropdown">
+                    <a href="index.html" class="mobile-nav-link">Home</a>
+                    <a href="menu.html" class="mobile-nav-link">Menu</a>
+                    <a href="index.html#about" class="mobile-nav-link">About</a>
+                    <a href="index.html#contact" class="mobile-nav-link">Contact</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="menu" class="menu">
+            <div class="container">
+                <img src="images/Menu.jpg" alt="Menu" class="menu-image">
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Bokachá</p>
+            <div class="social-links">
+                <a href="https://www.facebook.com/bokacha.turku">Facebook</a>
+                <a href="https://www.instagram.com/bokacha_turku">Instagram</a>
+            </div>
+        </div>
+    </footer>
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
+    <script>
+        // Initialize mobile navigation
+        console.log('Menu page: Initializing mobile navigation...');
+        initializeMobileNav();
+    </script>
+    
+    <script>
+        // Mobile navigation functionality
+        function initializeMobileNav() {
+            console.log('Menu page: Starting mobile navigation initialization...');
+            
+            // Check if we're on mobile
+            const isMobile = window.innerWidth <= 480;
+            console.log('Menu page: Is mobile?', isMobile, 'Window width:', window.innerWidth);
+            
+            // Find elements
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileNavDropdown = document.querySelector('.mobile-nav-dropdown');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            
+            console.log('Menu page: Found elements:', {
+                mobileMenuBtn: !!mobileMenuBtn,
+                mobileMenuBtnElement: mobileMenuBtn,
+                mobileNavDropdown: !!mobileNavDropdown,
+                mobileNavDropdownElement: mobileNavDropdown,
+                mobileNavLinks: mobileNavLinks.length,
+                mobileNavLinksElements: Array.from(mobileNavLinks)
+            });
+            
+            if (!mobileMenuBtn || !mobileNavDropdown) {
+                console.log('Menu page: Mobile navigation elements not found');
+                return;
+            }
+            
+            // Check CSS classes
+            console.log('Menu page: Initial CSS classes:', {
+                dropdownClasses: mobileNavDropdown.className,
+                dropdownStyles: window.getComputedStyle(mobileNavDropdown),
+                dropdownDisplay: window.getComputedStyle(mobileNavDropdown).display,
+                dropdownOpacity: window.getComputedStyle(mobileNavDropdown).opacity,
+                dropdownVisibility: window.getComputedStyle(mobileNavDropdown).visibility,
+                dropdownTransform: window.getComputedStyle(mobileNavDropdown).transform
+            });
+            
+            // Toggle mobile menu
+            mobileMenuBtn.addEventListener('click', function(event) {
+                console.log('Menu page: Mobile menu button clicked', event);
+                console.log('Menu page: Event target:', event.target);
+                console.log('Menu page: Current element:', this);
+                
+                const isOpen = mobileNavDropdown.classList.contains('show');
+                console.log('Menu page: Current dropdown state:', isOpen);
+                
+                if (isOpen) {
+                    console.log('Menu page: Closing dropdown...');
+                    mobileNavDropdown.classList.remove('show');
+                    mobileMenuBtn.textContent = '☰';
+                } else {
+                    console.log('Menu page: Opening dropdown...');
+                    mobileNavDropdown.classList.add('show');
+                    mobileMenuBtn.textContent = '×';
+                    
+                    // Check state after adding show class
+                    setTimeout(() => {
+                        console.log('Menu page: Dropdown state after show:', {
+                            classes: mobileNavDropdown.className,
+                            opacity: window.getComputedStyle(mobileNavDropdown).opacity,
+                            visibility: window.getComputedStyle(mobileNavDropdown).visibility,
+                            transform: window.getComputedStyle(mobileNavDropdown).transform,
+                            display: window.getComputedStyle(mobileNavDropdown).display,
+                            zIndex: window.getComputedStyle(mobileNavDropdown).zIndex
+                        });
+                    }, 100);
+                }
+            });
+            
+            // Close mobile menu when link is clicked
+            mobileNavLinks.forEach((link, index) => {
+                console.log(`Menu page: Adding click listener to link ${index}:`, link);
+                link.addEventListener('click', function() {
+                    console.log('Menu page: Mobile nav link clicked:', this);
+                    mobileNavDropdown.classList.remove('show');
+                    mobileMenuBtn.textContent = '☰';
+                });
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!mobileNavDropdown.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                    console.log('Menu page: Click outside dropdown, closing...');
+                    mobileNavDropdown.classList.remove('show');
+                    mobileMenuBtn.textContent = '☰';
+                }
+            });
+            
+            console.log('Menu page: Mobile navigation initialization complete');
+        }
+    </script>
+</body>
+</html>

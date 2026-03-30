@@ -1,0 +1,41 @@
+/* CSS Variables for Bokachá Theme Colors */
+:root {
+    /* Primary Theme Colors */
+    --background-pink: #fed7dc;
+    --contrast-dark-green: #223b32;
+    --middle-tone-green: #a1c0a0;
+    --plain-white: #ffffff;
+    
+    /* RGBA Versions for Transparency */
+    --background-pink-rgba: rgba(254, 215, 220, 0.85);
+    --contrast-dark-green-rgba: rgba(34, 59, 50, 0.2);
+    --middle-tone-green-rgba: rgba(161, 192, 160, 0.3);
+    --middle-tone-green-rgb: 161, 192, 160;
+    --middle-tone-green-dark-rgb: 107, 128, 107;
+    
+    /* Typography Colors */
+    --text-primary: var(--contrast-dark-green);
+    --text-light: var(--plain-white);
+    
+    /* Background Colors */
+    --bg-primary: var(--background-pink);
+    --bg-secondary: var(--middle-tone-green);
+    --bg-dark: var(--contrast-dark-green);
+    
+    /* Interaction Colors */
+    --hover-color: var(--middle-tone-green);
+    --active-color: var(--contrast-dark-green);
+    
+    /* Social Media Links */
+    --social-link-color: var(--text-light);
+    --social-link-hover: var(--hover-color);
+    
+    /* Font Families */
+    --font-primary: 'Times New Roman', Times, serif;
+    --font-accent: 'Pacifico', cursive;
+    
+    /* Spacing */
+    --border-radius: 8px;
+    --transition-speed: 0.3s;
+    --header-transition: 0.8s;
+}

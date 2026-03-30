@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bokachá</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <h1>Bokachá</h1>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="menu.html" class="nav-link">Menu</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="mobile-nav-toggle">
+                <button class="mobile-menu-btn">☰</button>
+                <div class="mobile-nav-dropdown">
+                    <a href="#home" class="mobile-nav-link">Home</a>
+                    <a href="menu.html" class="mobile-nav-link">Menu</a>
+                    <a href="#about" class="mobile-nav-link">About</a>
+                    <a href="#contact" class="mobile-nav-link">Contact</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <div class="popular-items">
+                    <div class="menu-item-card">
+                        <img src="images/products/1.png" alt="Brown Sugar Matcha">
+                        <h3>Brown Sugar Matcha</h3>
+                    </div>
+                    <div class="menu-item-card">
+                        <img src="images/products/2.png" alt="Taro">
+                        <h3>Taro</h3>
+                    </div>
+                    <div class="menu-item-card">
+                        <img src="images/products/3.png" alt="Summer">
+                        <h3>Summer</h3>
+                    </div>
+                    <div class="menu-item-card">
+                        <img src="images/products/4.png" alt="Snow Choco Cake">
+                        <h3>Snow Choco Cake</h3>
+                    </div>
+                </div>
+                <a href="https://wolt.com/fi/fin/turku/restaurant/bokacha-coffee-shop" target="_blank" class="wolt-button">Order on Wolt</a>
+            </div>
+        </section>
+
+        <div class="content-wrapper">
+            <section id="about" class="about">
+                <div class="container">
+                    <div class="about-grid">
+                        <div class="about-content">
+                            <h2 class="about-title">About Bokachá</h2>
+                            <p class="about-text">Bokachá started in 2019 by two students who love Turku and wanted to bring a taste of their childhood to the city.</p>
+                            <p class="about-text">We serve bubble tea and authentic Vietnamese coffee — simple, fun, and full of flavor. Every drink is made with care and a bit of our story behind it.</p>
+                        </div>
+                        <div class="about-image">
+                            <div class="image-carousel">
+                                <div class="image-stack">
+                                    <img src="images/about/1.JPG" alt="About Bokachá" class="about-image-active" id="about-image-1">
+                                    <img src="images/about/2.JPG" alt="About Bokachá" class="about-image-inactive" id="about-image-2">
+                                </div>
+                                <div class="carousel-controls">
+                                    <button class="carousel-btn prev-btn" onclick="changeAboutImage(-1)">‹</button>
+                                    <button class="carousel-btn next-btn" onclick="changeAboutImage(1)">›</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact" class="contact">
+                <div class="container">
+                    <h2>Visit Us</h2>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <h3>Location</h3>
+                            <p>Brahenkatu 5, Turku, Finland</p>
+                            <div class="reviews-embed">
+                                <iframe 
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d850.5545045624826!2d22.269863682622308!3d60.45268089642701!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x468c77ff123fbb99%3A0x3d0c8045f45a026c!2zQm9rYWNow6E!5e1!3m2!1ssv!2sfi!4v1774875474151!5m2!1ssv!2sfi" 
+                                    width="100%" 
+                                    height="300" 
+                                    style="border:0; border-radius: var(--border-radius); margin-top: 1rem;" 
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <h3>Hours</h3>
+                            <table class="hours-table" id="hours-table">
+                                <!-- Hours will be populated from markdown file -->
+                            </table>
+                        </div>
+                        <div class="contact-item">
+                            <h3>Contact</h3>
+                            <p>Phone: 040 1870555<br>Email: bokacha.contact@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                <div class="container">
+                    <p>&copy; 2026 Bokachá</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/bokacha.turku">Facebook</a>
+                        <a href="https://www.instagram.com/bokacha_turku">Instagram</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </main>
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
+    <script>
+        // Load hours from markdown file
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHoursFromMarkdown();
+        });
+        
+        // Function to load hours from markdown file
+        async function loadHoursFromMarkdown() {
+            try {
+                const response = await fetch('hours.md');
+                const markdownText = await response.text();
+                
+                // Parse markdown lines and populate table
+                const lines = markdownText.trim().split('\n');
+                const hoursTable = document.getElementById('hours-table');
+                
+                lines.forEach(line => {
+                    if (line.trim()) {
+                        // Split on the first colon only
+                        const colonIndex = line.indexOf(':');
+                        if (colonIndex !== -1) {
+                            const day = line.substring(0, colonIndex);
+                            const hours = line.substring(colonIndex + 1);
+                            
+                            const row = document.createElement('tr');
+                            const dayCell = document.createElement('td');
+                            const hoursCell = document.createElement('td');
+                            
+                            dayCell.textContent = day.trim();
+                            hoursCell.textContent = hours.trim();
+                            
+                            row.appendChild(dayCell);
+                            row.appendChild(hoursCell);
+                            hoursTable.appendChild(row);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading hours:', error);
+                // Fallback to default hours if file fails to load
+                const hoursTable = document.getElementById('hours-table');
+                const defaultHours = [
+                    ['Monday', '11:00–19:00'],
+                    ['Tuesday', '11:00–19:00'],
+                    ['Wednesday', '11:00–19:00'],
+                    ['Thursday', '11:00–19:00'],
+                    ['Friday', '11:00–19:00'],
+                    ['Saturday', '11:00–20:00'],
+                    ['Sunday', '12:00–18:00']
+                ];
+                
+                defaultHours.forEach(([day, hours]) => {
+                    const row = document.createElement('tr');
+                    const dayCell = document.createElement('td');
+                    const hoursCell = document.createElement('td');
+                    
+                    dayCell.textContent = day;
+                    hoursCell.textContent = hours;
+                    
+                    row.appendChild(dayCell);
+                    row.appendChild(hoursCell);
+                    hoursTable.appendChild(row);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
