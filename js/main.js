@@ -311,10 +311,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // About section image carousel
     const aboutImages = [
         'images/about/1.JPG',
-        'images/about/2.JPG',
+        'images/about/2.jpg',
         'images/about/3.JPG',
-        'images/about/4.JPG',
-        'images/about/5.JPG',
+        'images/about/4.jpg',
+        'images/about/5.jpg',
         'images/about/6.png'
     ];
     
