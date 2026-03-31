@@ -54,6 +54,12 @@ nav {
     text-decoration: none;
 }
 
+.logo-image {
+    height: 60px;
+    width: auto;
+    display: block;
+}
+
 .logo-link {
     text-decoration: none;
     color: var(--text-light);

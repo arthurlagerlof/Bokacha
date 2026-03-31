@@ -27,7 +27,45 @@ document.addEventListener('DOMContentLoaded', function() {
             popularItems.classList.add('show');
             woltButton.classList.add('move-down');
             hasShownItems = true;
+            
+            // Show category filters after 0.5s delay
+            setTimeout(showCategoryFilters, 500);
         }
+    }
+    
+    // Function to show category filters and set default drinks filter
+    function showCategoryFilters() {
+        const categoryFilters = document.querySelector('.category-filters');
+        if (categoryFilters) {
+            categoryFilters.classList.add('show');
+            
+            // Set default drinks category (show drinks, hide bites)
+            setDefaultDrinksFilter();
+        }
+    }
+    
+    // Function to set default drinks filter
+    function setDefaultDrinksFilter() {
+        // Remove all visible classes first
+        const allItems = document.querySelectorAll('.menu-item-card');
+        allItems.forEach(item => {
+            item.classList.remove('visible');
+        });
+        
+        // Show only drinks items
+        const drinksItems = document.querySelectorAll('.menu-item-card[data-category="drinks"]');
+        drinksItems.forEach(item => {
+            item.classList.add('visible');
+        });
+        
+        // Set active state on tea and coffee category text
+        const teaText = document.querySelector('.category-text[data-category="drinks"]:nth-of-type(1)');
+        const coffeeText = document.querySelector('.category-text[data-category="drinks"]:nth-of-type(3)');
+        const bitesText = document.querySelector('.category-text[data-category="bites"]');
+        
+        if (teaText) teaText.classList.add('active');
+        if (coffeeText) coffeeText.classList.add('active');
+        if (bitesText) bitesText.classList.remove('active');
     }
     
     // Function to reset the timer
@@ -35,6 +73,42 @@ document.addEventListener('DOMContentLoaded', function() {
         clearTimeout(showItemsTimeout);
         if (!hasShownItems) {
             showItemsTimeout = setTimeout(showPopularItems, 4000);
+        }
+    }
+    
+    // Function to handle category filtering
+    function handleCategoryFilter(category, clickedElement) {
+        const allCategoryTexts = document.querySelectorAll('.category-text');
+        const allMenuItems = document.querySelectorAll('.menu-item-card');
+        
+        // Remove active class from all category texts
+        allCategoryTexts.forEach(text => text.classList.remove('active'));
+        
+        // Remove visible class from all menu items first
+        allMenuItems.forEach(item => item.classList.remove('visible'));
+        
+        if (category === 'drinks') {
+            // Show drinks items
+            const drinksItems = document.querySelectorAll('.menu-item-card[data-category="drinks"]');
+            drinksItems.forEach(item => {
+                item.classList.add('visible');
+            });
+            
+            // Add active class to tea and coffee
+            const teaText = document.querySelector('.category-text[data-category="drinks"]:nth-of-type(1)');
+            const coffeeText = document.querySelector('.category-text[data-category="drinks"]:nth-of-type(3)');
+            if (teaText) teaText.classList.add('active');
+            if (coffeeText) coffeeText.classList.add('active');
+            
+        } else if (category === 'bites') {
+            // Show bites items
+            const bitesItems = document.querySelectorAll('.menu-item-card[data-category="bites"]');
+            bitesItems.forEach(item => {
+                item.classList.add('visible');
+            });
+            
+            // Add active class to bites
+            clickedElement.classList.add('active');
         }
     }
     
@@ -245,12 +319,33 @@ document.addEventListener('DOMContentLoaded', function() {
     
     window.addEventListener('scroll', highlightNavigation);
     
+    // Add category filtering event listeners
+    function initializeCategoryFilters() {
+        const categoryTexts = document.querySelectorAll('.category-text');
+        
+        categoryTexts.forEach(text => {
+            text.addEventListener('click', function(e) {
+                e.preventDefault();
+                const category = this.dataset.category;
+                handleCategoryFilter(category, this);
+            });
+        });
+    }
+    
+    // Initialize category filters when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeCategoryFilters);
+    } else {
+        initializeCategoryFilters();
+    }
+    
     // About section image carousel
     const aboutImages = [
         'images/about/1.JPG',
         'images/about/2.JPG',
         'images/about/3.JPG',
-        'images/about/4.JPG'
+        'images/about/4.JPG',
+        'images/about/5.JPG'
     ];
     
     let currentAboutImageIndex = 0;

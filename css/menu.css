@@ -1,20 +1,43 @@
 /* Menu Page Styles */
 .menu-image {
     width: 100%;
-    max-width: 800px;
+    max-width: 500px;
     height: auto;
     display: block;
     margin: 0 auto;
     border-radius: var(--border-radius);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-top: 2rem;
 }
 
 .menu {
     padding: 80px 0;
     background-color: var(--bg-primary);
+    text-align: center;
 }
 
 /* Header always visible on menu page */
 body.menu-page header {
     opacity: 1 !important;
+}
+
+/* Wolt button for menu page */
+.menu .wolt-button {
+    display: inline-block;
+    padding: 1.2rem 2.5rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+    background-color: white;
+    color: var(--bg-dark);
+    text-decoration: none;
+    border-radius: 0;
+    border: 2px solid var(--bg-dark);
+    transition: color var(--transition-speed) ease, background-color var(--transition-speed) ease;
+    white-space: nowrap;
+    margin-top: 2rem;
+}
+
+.menu .wolt-button:hover {
+    color: var(--middle-tone-green);
+    background-color: white;
 }
