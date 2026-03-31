@@ -1,5 +1,4 @@
-// Animation JavaScript for Bokachá Café
-// Future animations and interactive elements will be added here
+// Animation JavaScript for Bokachá 
 
 class BokachaAnimations {
     constructor() {
@@ -7,13 +6,8 @@ class BokachaAnimations {
     }
     
     init() {
-        // Intersection Observer for scroll animations
         this.setupScrollAnimations();
-        
-        // Menu item hover effects
         this.setupMenuAnimations();
-        
-        // Parallax effects
         this.setupParallax();
     }
     

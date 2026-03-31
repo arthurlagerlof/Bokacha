@@ -1,13 +1,38 @@
-/* Menu Page Styles */
+/* Menu grid container */
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Menu image styling */
 .menu-image {
     width: 100%;
-    max-width: 500px;
     height: auto;
     display: block;
-    margin: 0 auto;
     border-radius: var(--border-radius);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    margin-top: 2rem;
+}
+
+/* Make coffee image smaller */
+.menu-image:nth-child(2) {
+    max-width: 60%;
+    margin: 0 auto;
+}
+
+/* Responsive behavior for menu grid */
+@media (max-width: 1100px) {
+    .menu-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .menu-image {
+        min-width: auto;
+        max-width: 500px;
+        margin: 0 auto;
+    }
 }
 
 .menu {

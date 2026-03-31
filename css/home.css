@@ -90,6 +90,23 @@
     opacity: 1;
 }
 
+.popular-products-text {
+    position: absolute;
+    bottom: 320px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-light);
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.popular-products-text.show {
+    opacity: 1;
+}
+
 .category-text {
     display: inline-block;
     padding: 0.5rem 1rem;
@@ -352,34 +369,41 @@
     width: 100%;
 }
 
-.carousel-btn {
-    background-color: transparent;
-    color: var(--contrast-dark-green);
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: color var(--transition-speed) ease;
-    z-index: 10;
+.carousel-dots {
     display: flex;
-    align-items: center;
     justify-content: center;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
 }
 
-.carousel-btn:hover {
-    color: var(--background-pink);
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--bg-dark);
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    opacity: 0.8;
+}
+
+.dot:hover {
+    opacity: 1;
+}
+
+.dot.active {
+    width: 12px;
+    height: 12px;
+    background-color: var(--hover-color);
+    opacity: 1;
+    transform: scale(1.2);
 }
 
 .carousel-controls {
-    position: absolute;
-    bottom: -50px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
+    display: none;
+}
+
+.carousel-btn {
+    display: none;
 }
 
 .about h2 {
@@ -499,6 +523,21 @@
     
     .category-filters {
         bottom: 330px;  /* 50px higher than default 280px */
+    }
+    
+    .popular-products-text {
+        bottom: 370px;  /* 40px higher than category filters */
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 400px) {
+    .category-filters {
+        bottom: 280px;  /* 50px higher than 230px */
+    }
+    
+    .popular-products-text {
+        bottom: 320px;  /* 40px higher than category filters */
     }
 }
 

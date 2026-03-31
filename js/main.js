@@ -28,37 +28,31 @@ document.addEventListener('DOMContentLoaded', function() {
             woltButton.classList.add('move-down');
             hasShownItems = true;
             
-            // Show category filters after 0.5s delay
             setTimeout(showCategoryFilters, 500);
         }
     }
     
-    // Function to show category filters and set default drinks filter
     function showCategoryFilters() {
         const categoryFilters = document.querySelector('.category-filters');
+        const popularProductsText = document.querySelector('.popular-products-text');
         if (categoryFilters) {
             categoryFilters.classList.add('show');
-            
-            // Set default drinks category (show drinks, hide bites)
+            popularProductsText.classList.add('show');
             setDefaultDrinksFilter();
         }
     }
     
-    // Function to set default drinks filter
     function setDefaultDrinksFilter() {
-        // Remove all visible classes first
         const allItems = document.querySelectorAll('.menu-item-card');
         allItems.forEach(item => {
             item.classList.remove('visible');
         });
         
-        // Show only drinks items
         const drinksItems = document.querySelectorAll('.menu-item-card[data-category="drinks"]');
         drinksItems.forEach(item => {
             item.classList.add('visible');
         });
         
-        // Set active state on tea and coffee category text
         const teaText = document.querySelector('.category-text[data-category="drinks"]:nth-of-type(1)');
         const coffeeText = document.querySelector('.category-text[data-category="drinks"]:nth-of-type(3)');
         const bitesText = document.querySelector('.category-text[data-category="bites"]');
@@ -112,39 +106,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Monitor user activity (scrolling)
-    function handleActivity() {
-        lastActivityTime = Date.now();
-        // If user scrolls, don't show items automatically
+    // Function to reset the timer
+    function resetShowTimer() {
+        clearTimeout(showItemsTimeout);
         if (!hasShownItems) {
-            clearTimeout(showItemsTimeout);
+            showItemsTimeout = setTimeout(showPopularItems, 4000);
         }
     }
     
-    // Check if user is still in hero section and inactive
-    function checkHeroInactivity() {
-        if (hasShownItems) return;
-        
-        const currentScrollY = window.scrollY;
-        const heroHeight = window.innerHeight;
-        
-        // If user is still in hero section and hasn't scrolled for 4 seconds
-        if (currentScrollY < heroHeight / 2) {
-            const timeSinceActivity = Date.now() - lastActivityTime;
-            if (timeSinceActivity >= 4000) {
-                showPopularItems();
-            }
-        }
-    }
-    
-    // Initialize timer on page load
     resetShowTimer();
     
-    // Set up activity monitoring
-    window.addEventListener('scroll', handleActivity);
-    setInterval(checkHeroInactivity, 1000);
-    
-    // Menu item card interactions with wolt button
     const menuCards = document.querySelectorAll('.menu-item-card');
     
     menuCards.forEach(card => {
@@ -171,10 +142,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const header = document.querySelector('header');
     const contentWrapper = document.querySelector('.content-wrapper');
     let lastScrollY = window.scrollY;
-    let scrollThreshold = 100; // Minimum scroll before hiding
-    let contentAnimMaxScroll = 100; // Scroll distance for content animation
+    let scrollThreshold = 100;
+    let contentAnimMaxScroll = 100;
     
-    // Set initial header background based on current scroll position
     if (header) {
         const initialScrollY = window.scrollY;
         let initialOpacity;
@@ -262,7 +232,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Target absolute top:', targetAbsoluteTop);
                 console.log('Current scroll:', window.scrollY);
                 
-                // Calculate the scroll position needed (no wrapper offset needed)
                 const headerHeight = document.querySelector('header')?.offsetHeight || 0;
                 const targetScrollPosition = targetAbsoluteTop - headerHeight - 20;
                 
@@ -345,7 +314,8 @@ document.addEventListener('DOMContentLoaded', function() {
         'images/about/2.JPG',
         'images/about/3.JPG',
         'images/about/4.JPG',
-        'images/about/5.JPG'
+        'images/about/5.JPG',
+        'images/about/6.png'
     ];
     
     let currentAboutImageIndex = 0;
@@ -400,7 +370,68 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Reset auto-rotate timer when user manually changes image
         resetAutoRotate();
+        
+        // Update active dot
+        updateActiveDot();
     };
+    
+    function updateActiveDot() {
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, index) => {
+            if (index === currentAboutImageIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+    
+    function goToImage(imageIndex) {
+        const image1 = document.getElementById('about-image-1');
+        const image2 = document.getElementById('about-image-2');
+        
+        if (!image1 || !image2) return;
+        
+        // Update current index
+        currentAboutImageIndex = imageIndex;
+        
+        // Determine which image is currently active
+        const isImage1Active = image1.classList.contains('about-image-active');
+        
+        if (isImage1Active) {
+            // Image 1 is active, fade it out and fade in image 2
+            image1.classList.remove('about-image-active');
+            image1.classList.add('about-image-inactive');
+            
+            // Set new image source for image 2
+            image2.src = aboutImages[currentAboutImageIndex];
+            
+            // Fade in image 2
+            setTimeout(() => {
+                image2.classList.remove('about-image-inactive');
+                image2.classList.add('about-image-active');
+            }, 50);
+        } else {
+            // Image 2 is active, fade it out and fade in image 1
+            image2.classList.remove('about-image-active');
+            image2.classList.add('about-image-inactive');
+            
+            // Set new image source for image 1
+            image1.src = aboutImages[currentAboutImageIndex];
+            
+            // Fade in image 1
+            setTimeout(() => {
+                image1.classList.remove('about-image-inactive');
+                image1.classList.add('about-image-active');
+            }, 50);
+        }
+        
+        // Reset auto-rotate timer when user manually changes image
+        resetAutoRotate();
+        
+        // Update active dot
+        updateActiveDot();
+    }
     
     function autoRotateImage() {
         // Simulate clicking the next button
@@ -419,6 +450,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Start auto-rotation on page load
     resetAutoRotate();
+    
+    // Add dot click event listeners
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', function() {
+            const imageIndex = parseInt(this.dataset.image) - 1;
+            goToImage(imageIndex);
+        });
+    });
+    
+    // Initialize first dot as active
+    updateActiveDot();
 });
 
 // Mobile navigation functionality
