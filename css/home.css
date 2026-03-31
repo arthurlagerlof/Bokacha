@@ -217,8 +217,15 @@
 }
 
 .wolt-button.move-down {
-    bottom: 0;
+    bottom: 50px;
     transform: translateX(-50%) translateY(0);
+}
+
+/* Only move wolt button up on screens narrower than 550px */
+@media (min-width: 551px) {
+    .wolt-button.move-down {
+        bottom: 0;
+    }
 }
 
 .wolt-button:hover {
