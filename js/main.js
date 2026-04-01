@@ -335,12 +335,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // About section image carousel
     const aboutImages = [
-        'images/about/1.JPG',
-        'images/about/2.jpg',
-        'images/about/3.JPG',
-        'images/about/4.jpg',
-        'images/about/5.jpg',
-        'images/about/6.png'
+        'images/about/bokacha-cafe.JPG',
+        'images/about/bokacha-boba.jpg',
+        'images/about/coffee-and-cake.jpg',
+        'images/about/summer-drinks.JPG',
+        'images/about/take-away-boba.jpg',
+        'images/about/roses-and-boba-tea.png'
     ];
     
     let currentAboutImageIndex = 0;

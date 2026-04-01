@@ -6,6 +6,13 @@
     margin-top: 2rem;
 }
 
+/* Menu column styling */
+.menu-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
 /* Menu image styling */
 .menu-image {
     width: 100%;
@@ -15,9 +22,10 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Make coffee image smaller */
-.menu-image:nth-child(2) {
-    max-width: 60%;
+/* Make coffee and brown-sugar images smaller */
+.menu-column:nth-child(2) .menu-image {
+    width: 60%;
+    max-width: 500px;
     margin: 0 auto;
 }
 
