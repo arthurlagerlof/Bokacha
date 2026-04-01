@@ -172,7 +172,7 @@
     width: 100%;
     height: auto;
     max-height: 160px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: var(--border-radius);
     margin-bottom: 1rem;
     transition: transform var(--transition-speed) ease;
