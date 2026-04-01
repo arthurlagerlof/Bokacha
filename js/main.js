@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeCategoryFilters();
     }
     
-    // About section image carousel
+    // About section image carousel with improved reliability
     const aboutImages = [
         'images/about/bokacha-cafe.JPG',
         'images/about/bokacha-boba.jpg',
@@ -345,52 +345,168 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let currentAboutImageIndex = 0;
     let autoRotateInterval;
+    let imagesLoaded = false;
+    let loadedImages = [];
+    let failedImages = new Set();
     
-    window.changeAboutImage = function(direction) {
+    // Preload all images before initializing carousel
+    function preloadAboutImages() {
+        const loadPromises = aboutImages.map((src, index) => {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    loadedImages[index] = img;
+                    console.log(`Image ${index + 1} loaded: ${src}`);
+                    resolve(true);
+                };
+                img.onerror = () => {
+                    failedImages.add(index);
+                    console.error(`Failed to load image ${index + 1}: ${src}`);
+                    resolve(false); // Resolve even on error to continue
+                };
+                img.src = src;
+            });
+        });
+        
+        Promise.all(loadPromises).then(() => {
+            imagesLoaded = true;
+            initializeCarousel();
+            updateDotsVisibility();
+        });
+    }
+    
+    // Initialize carousel after images are loaded
+    function initializeCarousel() {
         const image1 = document.getElementById('about-image-1');
         const image2 = document.getElementById('about-image-2');
         
         if (!image1 || !image2) return;
         
-        // Calculate next image index
-        currentAboutImageIndex += direction;
+        // Set initial images
+        image1.src = aboutImages[0];
+        image2.src = aboutImages[1];
         
-        // Wrap around if we go past the boundaries
-        if (currentAboutImageIndex < 0) {
-            currentAboutImageIndex = aboutImages.length - 1;
-        } else if (currentAboutImageIndex >= aboutImages.length) {
-            currentAboutImageIndex = 0;
+        // Add dot click event listeners
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', function() {
+                const imageIndex = parseInt(this.dataset.image) - 1;
+                goToImage(imageIndex);
+            });
+        });
+        
+        // Start auto-rotation
+        resetAutoRotate();
+        
+        // Initialize first dot as active
+        updateActiveDot();
+    }
+    
+    // Update dots visibility based on loaded images
+    function updateDotsVisibility() {
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, index) => {
+            if (failedImages.has(index)) {
+                dot.style.display = 'none';
+            } else {
+                dot.style.display = 'block';
+            }
+        });
+    }
+    
+    // Get next valid image index (skips failed images)
+    function getNextValidIndex(currentIndex, direction = 1) {
+        let nextIndex = currentIndex + direction;
+        let attempts = 0;
+        
+        while (attempts < aboutImages.length) {
+            // Wrap around
+            if (nextIndex >= aboutImages.length) nextIndex = 0;
+            if (nextIndex < 0) nextIndex = aboutImages.length - 1;
+            
+            // Return if this image loaded successfully
+            if (!failedImages.has(nextIndex)) {
+                return nextIndex;
+            }
+            
+            // Try next image
+            nextIndex += direction;
+            attempts++;
         }
+        
+        return currentIndex; // Fallback to current if all failed
+    }
+    
+    window.changeAboutImage = function(direction) {
+        if (!imagesLoaded) return;
+        
+        const image1 = document.getElementById('about-image-1');
+        const image2 = document.getElementById('about-image-2');
+        
+        if (!image1 || !image2) return;
+        
+        // Get next valid image index
+        currentAboutImageIndex = getNextValidIndex(currentAboutImageIndex, direction);
         
         // Determine which image is currently active
         const isImage1Active = image1.classList.contains('about-image-active');
         
         if (isImage1Active) {
-            // Image 1 is active, fade it out and fade in image 2
+            // Image 1 is active, prepare image 2
             image1.classList.remove('about-image-active');
             image1.classList.add('about-image-inactive');
             
             // Set new image source for image 2
             image2.src = aboutImages[currentAboutImageIndex];
             
-            // Fade in image 2
-            setTimeout(() => {
-                image2.classList.remove('about-image-inactive');
-                image2.classList.add('about-image-active');
-            }, 50);
+            // Wait for image to load before showing
+            if (loadedImages[currentAboutImageIndex]) {
+                // Image already preloaded, show immediately
+                setTimeout(() => {
+                    image2.classList.remove('about-image-inactive');
+                    image2.classList.add('about-image-active');
+                }, 50);
+            } else {
+                // Wait for image to load
+                image2.onload = () => {
+                    image2.classList.remove('about-image-inactive');
+                    image2.classList.add('about-image-active');
+                };
+                image2.onerror = () => {
+                    console.error('Failed to load image during transition');
+                    // Fallback: show the previous image again
+                    image1.classList.remove('about-image-inactive');
+                    image1.classList.add('about-image-active');
+                };
+            }
         } else {
-            // Image 2 is active, fade it out and fade in image 1
+            // Image 2 is active, prepare image 1
             image2.classList.remove('about-image-active');
             image2.classList.add('about-image-inactive');
             
             // Set new image source for image 1
             image1.src = aboutImages[currentAboutImageIndex];
             
-            // Fade in image 1
-            setTimeout(() => {
-                image1.classList.remove('about-image-inactive');
-                image1.classList.add('about-image-active');
-            }, 50);
+            // Wait for image to load before showing
+            if (loadedImages[currentAboutImageIndex]) {
+                // Image already preloaded, show immediately
+                setTimeout(() => {
+                    image1.classList.remove('about-image-inactive');
+                    image1.classList.add('about-image-active');
+                }, 50);
+            } else {
+                // Wait for image to load
+                image1.onload = () => {
+                    image1.classList.remove('about-image-inactive');
+                    image1.classList.add('about-image-active');
+                };
+                image1.onerror = () => {
+                    console.error('Failed to load image during transition');
+                    // Fallback: show the previous image again
+                    image2.classList.remove('about-image-inactive');
+                    image2.classList.add('about-image-active');
+                };
+            }
         }
         
         // Reset auto-rotate timer when user manually changes image
@@ -412,6 +528,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function goToImage(imageIndex) {
+        if (!imagesLoaded || failedImages.has(imageIndex)) return;
+        
         const image1 = document.getElementById('about-image-1');
         const image2 = document.getElementById('about-image-2');
         
@@ -424,31 +542,57 @@ document.addEventListener('DOMContentLoaded', function() {
         const isImage1Active = image1.classList.contains('about-image-active');
         
         if (isImage1Active) {
-            // Image 1 is active, fade it out and fade in image 2
+            // Image 1 is active, prepare image 2
             image1.classList.remove('about-image-active');
             image1.classList.add('about-image-inactive');
             
             // Set new image source for image 2
             image2.src = aboutImages[currentAboutImageIndex];
             
-            // Fade in image 2
-            setTimeout(() => {
-                image2.classList.remove('about-image-inactive');
-                image2.classList.add('about-image-active');
-            }, 50);
+            // Wait for image to load before showing
+            if (loadedImages[currentAboutImageIndex]) {
+                setTimeout(() => {
+                    image2.classList.remove('about-image-inactive');
+                    image2.classList.add('about-image-active');
+                }, 50);
+            } else {
+                image2.onload = () => {
+                    image2.classList.remove('about-image-inactive');
+                    image2.classList.add('about-image-active');
+                };
+                image2.onerror = () => {
+                    console.error('Failed to load image during transition');
+                    // Fallback: show the previous image again
+                    image1.classList.remove('about-image-inactive');
+                    image1.classList.add('about-image-active');
+                };
+            }
         } else {
-            // Image 2 is active, fade it out and fade in image 1
+            // Image 2 is active, prepare image 1
             image2.classList.remove('about-image-active');
             image2.classList.add('about-image-inactive');
             
             // Set new image source for image 1
             image1.src = aboutImages[currentAboutImageIndex];
             
-            // Fade in image 1
-            setTimeout(() => {
-                image1.classList.remove('about-image-inactive');
-                image1.classList.add('about-image-active');
-            }, 50);
+            // Wait for image to load before showing
+            if (loadedImages[currentAboutImageIndex]) {
+                setTimeout(() => {
+                    image1.classList.remove('about-image-inactive');
+                    image1.classList.add('about-image-active');
+                }, 50);
+            } else {
+                image1.onload = () => {
+                    image1.classList.remove('about-image-inactive');
+                    image1.classList.add('about-image-active');
+                };
+                image1.onerror = () => {
+                    console.error('Failed to load image during transition');
+                    // Fallback: show the previous image again
+                    image2.classList.remove('about-image-inactive');
+                    image2.classList.add('about-image-active');
+                };
+            }
         }
         
         // Reset auto-rotate timer when user manually changes image
@@ -469,24 +613,14 @@ document.addEventListener('DOMContentLoaded', function() {
             clearInterval(autoRotateInterval);
         }
         
-        // Start new interval
-        autoRotateInterval = setInterval(autoRotateImage, 5000);
+        // Only start auto-rotation if images are loaded and not all failed
+        if (imagesLoaded && failedImages.size < aboutImages.length) {
+            autoRotateInterval = setInterval(autoRotateImage, 5000);
+        }
     }
     
-    // Start auto-rotation on page load
-    resetAutoRotate();
-    
-    // Add dot click event listeners
-    const dots = document.querySelectorAll('.dot');
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', function() {
-            const imageIndex = parseInt(this.dataset.image) - 1;
-            goToImage(imageIndex);
-        });
-    });
-    
-    // Initialize first dot as active
-    updateActiveDot();
+    // Start preloading images
+    preloadAboutImages();
 });
 
 // Mobile navigation functionality
