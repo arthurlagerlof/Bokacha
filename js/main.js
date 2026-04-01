@@ -138,7 +138,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Header scroll hide/show functionality
+    // Reviews separator scroll animation
+    const reviewsSection = document.querySelector('#reviews');
+    const reviewsSeparator = document.querySelector('.reviews-separator');
+    let hasExpandedSeparator = false;
+    
+    function handleReviewsSeparatorScroll() {
+        if (!reviewsSection || !reviewsSeparator) return;
+        
+        const reviewsSectionBottom = reviewsSection.getBoundingClientRect().bottom;
+        const viewportHeight = window.innerHeight;
+        
+        // Check if user has scrolled past the reviews section
+        if (reviewsSectionBottom < viewportHeight && !hasExpandedSeparator) {
+            reviewsSeparator.classList.add('expanded');
+            hasExpandedSeparator = true;
+        } else if (reviewsSectionBottom >= viewportHeight && hasExpandedSeparator) {
+            reviewsSeparator.classList.remove('expanded');
+            hasExpandedSeparator = false;
+        }
+    }
+    
+    // Add scroll listener for reviews separator
+    window.addEventListener('scroll', handleReviewsSeparatorScroll);
+    
+    // Initialize separator state
+    handleReviewsSeparatorScroll();
     const header = document.querySelector('header');
     const contentWrapper = document.querySelector('.content-wrapper');
     let lastScrollY = window.scrollY;

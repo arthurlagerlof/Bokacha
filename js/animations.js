@@ -26,7 +26,7 @@ class BokachaAnimations {
         }, observerOptions);
         
         // Observe elements for animation
-        const animatedElements = document.querySelectorAll('.menu-item, .contact-item, .about-title, .about-text');
+        const animatedElements = document.querySelectorAll('.menu-item, .contact-item, .about-title, .about-text, .contact-title');
         
         animatedElements.forEach(el => {
             observer.observe(el);

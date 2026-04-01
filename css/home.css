@@ -171,8 +171,8 @@
 .menu-item-card img {
     width: 100%;
     height: auto;
-    max-height: 200px;
-    object-fit: contain;
+    max-height: 160px;
+    object-fit: cover;
     border-radius: var(--border-radius);
     margin-bottom: 1rem;
     transition: transform var(--transition-speed) ease;
@@ -221,7 +221,7 @@
     transform: translateX(-50%) translateY(0);
 }
 
-/* Only move wolt button up on screens narrower than 550px */
+/* Responsively move wolt button */
 @media (min-width: 551px) {
     .wolt-button.move-down {
         bottom: 0;
@@ -320,7 +320,7 @@
 
 /* About section */
 .about {
-    padding: 40px 1rem;
+    padding: 40px 4rem 40px 3rem;
     background-color: var(--bg-secondary);
     color: var(--text-primary);
     position: relative;
@@ -339,6 +339,11 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+}
+
+.about-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
 .about-image {
@@ -479,15 +484,21 @@
 }
 
 .reviews {
-    padding: 80px 0;
-    background-color: var(--bg-secondary);
+    padding: 80px 0 0 0;
+    background-color: var(--bg-primary);
     color: var(--text-primary);
 }
 
-.reviews-widget {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+.reviews-separator {
+    width: 30%;
+    height: 2px;
+    background-color: var(--contrast-dark-green);
+    margin: 2rem auto 0 auto;
+    transition: width 3s ease;
+}
+
+.reviews-separator.expanded {
+    width: 80%;
 }
 
 .hours-table {
@@ -529,22 +540,22 @@
     }
     
     .category-filters {
-        bottom: 330px;  /* 50px higher than default 280px */
+        bottom: 330px; 
     }
     
     .popular-products-text {
-        bottom: 370px;  /* 40px higher than category filters */
+        bottom: 370px;  
     }
 }
 
 /* Extra small screens */
 @media (max-width: 400px) {
     .category-filters {
-        bottom: 280px;  /* 50px higher than 230px */
+        bottom: 320px;  
     }
     
     .popular-products-text {
-        bottom: 320px;  /* 40px higher than category filters */
+        bottom: 360px;  
     }
 }
 
@@ -558,6 +569,10 @@
     
     .hero-content h2 {
         font-size: 2rem;
+    }
+    
+    .about {
+        padding: 40px 1rem;
     }
     
     .about-grid {
