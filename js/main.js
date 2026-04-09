@@ -724,7 +724,7 @@ function initializeReviewsCarousel() {
     }
     
     function startReviewsAutoRotate() {
-        reviewsAutoRotateInterval = setInterval(reviewsAutoRotate, 5000);
+        reviewsAutoRotateInterval = setInterval(reviewsAutoRotate, 6000);
     }
     
     function stopReviewsAutoRotate() {
