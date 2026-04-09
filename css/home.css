@@ -386,6 +386,8 @@
     justify-content: center;
     gap: 0.8rem;
     margin-top: 1.5rem;
+    min-height: 12px;
+    align-items: center;
 }
 
 .dot {
@@ -605,5 +607,117 @@
     
     .contact-info {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Reviews Carousel */
+.reviews {
+    overflow: hidden;
+}
+
+.reviews-carousel-container {
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.reviews-carousel {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.reviews-track {
+    display: flex;
+    gap: 1.5rem;
+    transition: transform 0.5s ease;
+    width: max-content;
+}
+
+.review-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 1.25rem;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    width: 270px;
+    height: 230px;
+    flex-shrink: 0;
+}
+
+.review-google-logo {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.review-stars {
+    color: #ffc107;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: 2px;
+}
+
+.review-content {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    flex-grow: 1;
+}
+
+.review-date {
+    color: var(--text-secondary, #666);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.review-author {
+    color: var(--text-primary);
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin: 0 0 0.25rem 0;
+}
+
+.reviews-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+    min-height: 12px;
+    align-items: center;
+}
+
+.reviews-dots .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--bg-dark);
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    opacity: 0.8;
+}
+
+.reviews-dots .dot:hover {
+    opacity: 1;
+}
+
+.reviews-dots .dot.active {
+    width: 12px;
+    height: 12px;
+    background-color: var(--middle-tone-green);
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+    .review-card {
+        padding: 1rem;
     }
 }

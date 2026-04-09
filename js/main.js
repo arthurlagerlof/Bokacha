@@ -386,9 +386,9 @@ document.addEventListener('DOMContentLoaded', function() {
         image1.src = aboutImages[0];
         image2.src = aboutImages[1];
         
-        // Add dot click event listeners
-        const dots = document.querySelectorAll('.dot');
-        dots.forEach((dot, index) => {
+        // Add dot click event listeners (only for about section dots)
+        const dots = document.querySelectorAll('.image-carousel .dot');
+        dots.forEach((dot) => {
             dot.addEventListener('click', function() {
                 const imageIndex = parseInt(this.dataset.image) - 1;
                 goToImage(imageIndex);
@@ -404,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update dots visibility based on loaded images
     function updateDotsVisibility() {
-        const dots = document.querySelectorAll('.dot');
+        const dots = document.querySelectorAll('.image-carousel .dot');
         dots.forEach((dot, index) => {
             if (failedImages.has(index)) {
                 dot.style.display = 'none';
@@ -517,7 +517,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     function updateActiveDot() {
-        const dots = document.querySelectorAll('.dot');
+        const dots = document.querySelectorAll('.image-carousel .dot');
         dots.forEach((dot, index) => {
             if (index === currentAboutImageIndex) {
                 dot.classList.add('active');
@@ -621,7 +621,195 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Start preloading images
     preloadAboutImages();
+
+    // Reviews carousel dot navigation
+    initializeReviewsCarousel();
 });
+
+// Reviews carousel functionality with dynamic pagination
+function initializeReviewsCarousel() {
+    const track = document.getElementById('reviews-track');
+    const dotsContainer = document.getElementById('reviews-dots');
+    const carousel = document.getElementById('reviews-carousel');
+    
+    if (!track || !dotsContainer || !carousel) return;
+    
+    const cards = Array.from(track.querySelectorAll('.review-card'));
+    const cardWidth = 270;
+    const gap = 24; // 1.5rem = 24px
+    
+    let currentPageIndex = 0;
+    let totalPages = 1;
+    let cardsPerPage = 4;
+    let reviewsAutoRotateInterval;
+    
+    // Calculate how many cards fit in the viewport
+    function calculateCardsPerPage() {
+        // Get the actual viewport width
+        const containerWidth = carousel.clientWidth;
+        
+        // Calculate: n cards + (n-1) gaps must fit in available width
+        // n * cardWidth + (n-1) * gap <= containerWidth
+        // n * (cardWidth + gap) - gap <= containerWidth
+        // n <= (containerWidth + gap) / (cardWidth + gap)
+        const maxCards = Math.floor((containerWidth + gap) / (cardWidth + gap));
+        
+        return Math.max(1, Math.min(maxCards, cards.length));
+    }
+    
+    // Create dots based on total pages needed
+    function createDots() {
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < totalPages; i++) {
+            const dot = document.createElement('span');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.dataset.page = i;
+            dot.addEventListener('click', () => goToPage(i));
+            dotsContainer.appendChild(dot);
+        }
+    }
+    
+    // Update carousel layout
+    function updateLayout() {
+        cardsPerPage = calculateCardsPerPage();
+        totalPages = Math.ceil(cards.length / cardsPerPage);
+        
+        // Ensure current page is valid
+        if (currentPageIndex >= totalPages) {
+            currentPageIndex = totalPages - 1;
+        }
+        
+        createDots();
+        updateTrackPosition();
+    }
+    
+    // Slide track to show current page (centered)
+    function updateTrackPosition() {
+        const cardTotalWidth = cardWidth + gap;
+        const containerWidth = carousel.clientWidth;
+        
+        // Width of visible cards on this page
+        const visibleCardsWidth = cardsPerPage * cardWidth + (cardsPerPage - 1) * gap;
+        
+        // Calculate centering offset (to center the visible group)
+        const centerOffset = (containerWidth - visibleCardsWidth) / 2;
+        
+        // Calculate slide offset based on current page
+        const slideOffset = currentPageIndex * cardsPerPage * cardTotalWidth;
+        
+        // Total transform: center the group, then slide to correct page
+        const totalOffset = centerOffset - slideOffset;
+        
+        track.style.transform = `translateX(${totalOffset}px)`;
+        
+        // Update active dot
+        const dots = dotsContainer.querySelectorAll('.dot');
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentPageIndex);
+        });
+    }
+    
+    // Navigate to specific page
+    function goToPage(pageIndex) {
+        if (pageIndex < 0 || pageIndex >= totalPages) return;
+        currentPageIndex = pageIndex;
+        updateTrackPosition();
+        resetReviewsAutoRotate();
+    }
+    
+    // Auto-rotate reviews
+    function reviewsAutoRotate() {
+        currentPageIndex = (currentPageIndex + 1) % totalPages;
+        updateTrackPosition();
+    }
+    
+    function startReviewsAutoRotate() {
+        reviewsAutoRotateInterval = setInterval(reviewsAutoRotate, 5000);
+    }
+    
+    function stopReviewsAutoRotate() {
+        clearInterval(reviewsAutoRotateInterval);
+        reviewsAutoRotateInterval = null;
+    }
+    
+    function resetReviewsAutoRotate() {
+        stopReviewsAutoRotate();
+        startReviewsAutoRotate();
+    }
+    
+    // Initialize
+    // Process card content (truncate long reviews, convert dates)
+    const maxReviewLength = 130; // Truncate reviews longer than this
+    cards.forEach(card => {
+        // Truncate long reviews
+        const contentEl = card.querySelector('.review-content');
+        if (contentEl) {
+            const originalContent = contentEl.textContent.trim();
+            if (originalContent.length > maxReviewLength) {
+                // Find the last space before maxLength to avoid cutting mid-word
+                let truncateAt = maxReviewLength;
+                while (truncateAt > 0 && originalContent[truncateAt] !== ' ') {
+                    truncateAt--;
+                }
+                if (truncateAt === 0) truncateAt = maxReviewLength;
+                contentEl.textContent = originalContent.substring(0, truncateAt).trim() + '...';
+            }
+        }
+        
+        // Convert dates to relative time
+        const dateEl = card.querySelector('.review-date');
+        if (dateEl) {
+            const originalDate = dateEl.textContent;
+            dateEl.textContent = formatRelativeTime(originalDate);
+        }
+    });
+    
+    updateLayout();
+    startReviewsAutoRotate();
+    
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(updateLayout, 100);
+    });
+    
+    // Pause on hover
+    const reviewsContainer = document.querySelector('.reviews-carousel-container');
+    if (reviewsContainer) {
+        reviewsContainer.addEventListener('mouseenter', stopReviewsAutoRotate);
+        reviewsContainer.addEventListener('mouseleave', () => {
+            // Only start if not already running to avoid double intervals
+            if (!reviewsAutoRotateInterval) {
+                startReviewsAutoRotate();
+            }
+        });
+    }
+}
+
+// Convert date to relative time (e.g., "2 months ago", "1 year ago")
+function formatRelativeTime(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    
+    const diffMs = now - date;
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    const diffMonths = Math.floor(diffDays / 30);
+    const diffYears = Math.floor(diffDays / 365);
+    
+    if (diffYears >= 1) {
+        return diffYears === 1 ? '1 year ago' : `${diffYears} years ago`;
+    } else if (diffMonths >= 1) {
+        return diffMonths === 1 ? '1 month ago' : `${diffMonths} months ago`;
+    } else if (diffDays >= 1) {
+        return diffDays === 1 ? '1 day ago' : `${diffDays} days ago`;
+    } else {
+        return 'today';
+    }
+}
 
 // Mobile navigation functionality
 function initializeMobileNav() {
