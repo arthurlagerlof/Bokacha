@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bokachá</title>
     <link rel="icon" href="favicon.ico">
-    <link rel="preload" as="image" href="images/hero.avif" type="image/avif">
+    <link rel="preload" as="image" href="images/hero.avif" type="image/avif" fetchpriority="high">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/home.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"></noscript>
 </head>
 <body>
     <header>
@@ -46,6 +48,11 @@
 
     <main>
         <section id="home" class="hero">
+            <picture class="hero-bg">
+                <source srcset="images/hero.avif" type="image/avif">
+                <source srcset="images/hero.webp" type="image/webp">
+                <img src="images/hero.JPG" alt="" fetchpriority="high" decoding="async">
+            </picture>
             <div class="hero-content">
                 <div class="category-filters">
                     <span class="category-text" data-category="drinks">tea</span>
@@ -122,56 +129,56 @@
                     <div class="reviews-carousel" id="reviews-carousel">
                         <div class="reviews-track" id="reviews-track">
                             <div class="review-card">
-                                <img src="images/google.png" alt="Google" class="review-google-logo">
+                                <img src="images/google.png" alt="Google" class="review-google-logo" loading="lazy">
                                 <p class="review-author">Memet K.</p>
                                 <div class="review-stars">★★★★★</div>
                                 <p class="review-content">Väldigt mysig stämning och personalen trevliga. Drickan var inte min typ men kommer tillbaka och testar nya drycker</p>
                                 <p class="review-date">2025-11-12</p>
                             </div>
                             <div class="review-card">
-                                <img src="images/google.png" alt="Google" class="review-google-logo">
+                                <img src="images/google.png" alt="Google" class="review-google-logo" loading="lazy">
                                 <p class="review-author">Fangda C.</p>
                                 <div class="review-stars">★★★★★</div>
                                 <p class="review-content">Good looking and tasty boba tea. I got mine as Thai milk tea with Boba and it hits the right spot 👊🏻🤤</p>
                                 <p class="review-date">2026-03-09</p>
                             </div>
                             <div class="review-card">
-                                <img src="images/google.png" alt="Google" class="review-google-logo">
+                                <img src="images/google.png" alt="Google" class="review-google-logo" loading="lazy">
                                 <p class="review-author">Gavril S.</p>
                                 <div class="review-stars">★★★★★</div>
                                 <p class="review-content">Such a cozy and charming café! The atmosphere is calm and welcoming — perfect for a relaxed bubble tea break or catching up with a friend. We had some delicious drinks served in cute glasses with fun straws. The interior is lovely, with lots of natural light and comfy seating. The staff is so sweet. Definitely a place I'd love to visit again!</p>
                                 <p class="review-date">2025-07-09</p>
                             </div>
                             <div class="review-card">
-                                <img src="images/google.png" alt="Google" class="review-google-logo">
+                                <img src="images/google.png" alt="Google" class="review-google-logo" loading="lazy">
                                 <p class="review-author">Testiana K.</p>
                                 <div class="review-stars">★★★★★</div>
                                 <p class="review-content">Todella herkullista ja hienoa, valinnanvaikeutta on. Ensimmäisellä kerralla valitsin itselleni makean pommin, mutta myöhemmin opin valitsemaan sopivan juoman. Paikka on pieni, juoman hinta oli 8 €.</p>
                                 <p class="review-date">2025-11-15</p>
                             </div>
                             <div class="review-card">
-                                <img src="images/google.png" alt="Google" class="review-google-logo">
+                                <img src="images/google.png" alt="Google" class="review-google-logo" loading="lazy">
                                 <p class="review-author">Åsa B.</p>
                                 <div class="review-stars">★★★★★</div>
                                 <p class="review-content">The staff are lovely, the drinks are tasty (though I do not drink coffee so I cannot judge their coffee) and the atmosphere is very cozy. I frequently go there to study, often spending several hours there, and the staff are always very kind.</p>
                                 <p class="review-date">2025-04-01</p>
                             </div>
                             <div class="review-card">
-                                <img src="images/google.png" alt="Google" class="review-google-logo">
+                                <img src="images/google.png" alt="Google" class="review-google-logo" loading="lazy">
                                 <p class="review-author">Vlospa K.</p>
                                 <div class="review-stars">★★★★★</div>
                                 <p class="review-content">Lovely! The atmosphere is welcoming, the staff friendly and very helpful, the coffee was great and enjoying it there was simply a pleasure. Loved the decoration and the whole vibe in there.</p>
                                 <p class="review-date">2025-04-01</p>
                             </div>
                             <div class="review-card">
-                                <img src="images/google.png" alt="Google" class="review-google-logo">
+                                <img src="images/google.png" alt="Google" class="review-google-logo" loading="lazy">
                                 <p class="review-author">Aiko O.</p>
                                 <div class="review-stars">★★★★★</div>
                                 <p class="review-content">Beautiful place, tasty drinks and nice staff! The girl who served us was very helpful and kind. The matcha latte with classic boba 🧋 was simply fantastic! My husband took a chocolate latte with boba and he also loved his drink! We will be back for sure! This is now my favorite matcha latte place in Turku 🙌🏼❤️</p>
                                 <p class="review-date">2024-04-01</p>
                             </div>
                             <div class="review-card">
-                                <img src="images/google.png" alt="Google" class="review-google-logo">
+                                <img src="images/google.png" alt="Google" class="review-google-logo" loading="lazy">
                                 <p class="review-author">Dominique</p>
                                 <div class="review-stars">★★★★★</div>
                                 <p class="review-content">Been visiting Bokachá since they opened in Turku and absolutely love the coziness, great location & friendly warm service every time! The boba is always tasty and whenever I have a need for less caffeine for example- they're always spot on with recommendations! I love their soft serve during the summer and am typically an iced boba person.</p>
