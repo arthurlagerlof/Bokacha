@@ -237,9 +237,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetElement = document.querySelector(targetId);
             
             if (targetElement) {
-                console.log('Clicked navigation to:', targetId);
-                console.log('Target element:', targetElement);
-                
                 // Special handling for home section (hero is outside content wrapper)
                 if (targetId === '#home') {
                     // Scroll to top of page for home
@@ -254,13 +251,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const targetRect = targetElement.getBoundingClientRect();
                 const targetAbsoluteTop = targetRect.top + window.scrollY;
                 
-                console.log('Target absolute top:', targetAbsoluteTop);
-                console.log('Current scroll:', window.scrollY);
-                
                 const headerHeight = document.querySelector('header')?.offsetHeight || 0;
                 const targetScrollPosition = targetAbsoluteTop - headerHeight - 20;
-                
-                console.log('Calculated scroll position:', targetScrollPosition);
                 
                 // Smooth scroll to calculated position
                 window.scrollTo({
@@ -334,13 +326,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // About section image carousel with improved reliability
+    // Each image has AVIF, WebP, and JPEG formats
     const aboutImages = [
-        'images/about/bokacha-cafe.JPG',
-        'images/about/bokacha-boba.jpg',
-        'images/about/coffee-and-cake.jpg',
-        'images/about/summer-drinks.JPG',
-        'images/about/take-away-boba.jpg',
-        'images/about/roses-and-boba-tea.png'
+        { avif: 'images/about/bokacha-cafe.avif', webp: 'images/about/bokacha-cafe.webp', jpg: 'images/about/bokacha-cafe.JPG' },
+        { avif: 'images/about/bokacha-boba.avif', webp: 'images/about/bokacha-boba.webp', jpg: 'images/about/bokacha-boba.jpg' },
+        { avif: 'images/about/coffee-and-cake.avif', webp: 'images/about/coffee-and-cake.webp', jpg: 'images/about/coffee-and-cake.jpg' },
+        { avif: 'images/about/summer-drinks.avif', webp: 'images/about/summer-drinks.webp', jpg: 'images/about/summer-drinks.JPG' },
+        { avif: 'images/about/take-away-boba.avif', webp: 'images/about/take-away-boba.webp', jpg: 'images/about/take-away-boba.jpg' },
+        { avif: 'images/about/roses-and-boba-tea.avif', webp: 'images/about/roses-and-boba-tea.webp', jpg: 'images/about/roses-and-boba-tea.png' }
     ];
     
     let currentAboutImageIndex = 0;
@@ -350,21 +343,22 @@ document.addEventListener('DOMContentLoaded', function() {
     let failedImages = new Set();
     
     // Preload all images before initializing carousel
+    // Try AVIF first, then WebP, then JPEG as final fallback
     function preloadAboutImages() {
-        const loadPromises = aboutImages.map((src, index) => {
+        const loadPromises = aboutImages.map((imageSet, index) => {
             return new Promise((resolve) => {
                 const img = new Image();
                 img.onload = () => {
                     loadedImages[index] = img;
-                    console.log(`Image ${index + 1} loaded: ${src}`);
                     resolve(true);
                 };
                 img.onerror = () => {
                     failedImages.add(index);
-                    console.error(`Failed to load image ${index + 1}: ${src}`);
                     resolve(false); // Resolve even on error to continue
                 };
-                img.src = src;
+                // Try formats in order: AVIF -> WebP -> JPEG
+                img.src = imageSet.avif;
+                // If AVIF fails, browser will try WebP via picture element, then JPEG
             });
         });
         
@@ -375,6 +369,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Helper function to update picture element sources
+    function updatePictureSources(pictureEl, imageSet) {
+        const sources = pictureEl.querySelectorAll('source');
+        if (sources[0]) sources[0].srcset = imageSet.avif;
+        if (sources[1]) sources[1].srcset = imageSet.webp;
+        const img = pictureEl.querySelector('img');
+        if (img) img.src = imageSet.jpg;
+    }
+    
     // Initialize carousel after images are loaded
     function initializeCarousel() {
         const image1 = document.getElementById('about-image-1');
@@ -382,9 +385,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!image1 || !image2) return;
         
-        // Set initial images
-        image1.src = aboutImages[0];
-        image2.src = aboutImages[1];
+        // Set initial images (index 0 and 1)
+        updatePictureSources(image1, aboutImages[0]);
+        updatePictureSources(image2, aboutImages[1]);
         
         // Add dot click event listeners (only for about section dots)
         const dots = document.querySelectorAll('.image-carousel .dot');
@@ -457,7 +460,7 @@ document.addEventListener('DOMContentLoaded', function() {
             image1.classList.add('about-image-inactive');
             
             // Set new image source for image 2
-            image2.src = aboutImages[currentAboutImageIndex];
+            updatePictureSources(image2, aboutImages[currentAboutImageIndex]);
             
             // Wait for image to load before showing
             if (loadedImages[currentAboutImageIndex]) {
@@ -468,12 +471,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 50);
             } else {
                 // Wait for image to load
-                image2.onload = () => {
+                const imgEl = image2.querySelector('img');
+                imgEl.onload = () => {
                     image2.classList.remove('about-image-inactive');
                     image2.classList.add('about-image-active');
                 };
-                image2.onerror = () => {
-                    console.error('Failed to load image during transition');
+                imgEl.onerror = () => {
                     // Fallback: show the previous image again
                     image1.classList.remove('about-image-inactive');
                     image1.classList.add('about-image-active');
@@ -485,7 +488,7 @@ document.addEventListener('DOMContentLoaded', function() {
             image2.classList.add('about-image-inactive');
             
             // Set new image source for image 1
-            image1.src = aboutImages[currentAboutImageIndex];
+            updatePictureSources(image1, aboutImages[currentAboutImageIndex]);
             
             // Wait for image to load before showing
             if (loadedImages[currentAboutImageIndex]) {
@@ -496,12 +499,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 50);
             } else {
                 // Wait for image to load
-                image1.onload = () => {
+                const imgEl = image1.querySelector('img');
+                imgEl.onload = () => {
                     image1.classList.remove('about-image-inactive');
                     image1.classList.add('about-image-active');
                 };
-                image1.onerror = () => {
-                    console.error('Failed to load image during transition');
+                imgEl.onerror = () => {
                     // Fallback: show the previous image again
                     image2.classList.remove('about-image-inactive');
                     image2.classList.add('about-image-active');
@@ -547,7 +550,7 @@ document.addEventListener('DOMContentLoaded', function() {
             image1.classList.add('about-image-inactive');
             
             // Set new image source for image 2
-            image2.src = aboutImages[currentAboutImageIndex];
+            updatePictureSources(image2, aboutImages[currentAboutImageIndex]);
             
             // Wait for image to load before showing
             if (loadedImages[currentAboutImageIndex]) {
@@ -556,12 +559,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     image2.classList.add('about-image-active');
                 }, 50);
             } else {
-                image2.onload = () => {
+                const imgEl = image2.querySelector('img');
+                imgEl.onload = () => {
                     image2.classList.remove('about-image-inactive');
                     image2.classList.add('about-image-active');
                 };
-                image2.onerror = () => {
-                    console.error('Failed to load image during transition');
+                imgEl.onerror = () => {
                     // Fallback: show the previous image again
                     image1.classList.remove('about-image-inactive');
                     image1.classList.add('about-image-active');
@@ -573,7 +576,7 @@ document.addEventListener('DOMContentLoaded', function() {
             image2.classList.add('about-image-inactive');
             
             // Set new image source for image 1
-            image1.src = aboutImages[currentAboutImageIndex];
+            updatePictureSources(image1, aboutImages[currentAboutImageIndex]);
             
             // Wait for image to load before showing
             if (loadedImages[currentAboutImageIndex]) {
@@ -582,12 +585,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     image1.classList.add('about-image-active');
                 }, 50);
             } else {
-                image1.onload = () => {
+                const imgEl = image1.querySelector('img');
+                imgEl.onload = () => {
                     image1.classList.remove('about-image-inactive');
                     image1.classList.add('about-image-active');
                 };
-                image1.onerror = () => {
-                    console.error('Failed to load image during transition');
+                imgEl.onerror = () => {
                     // Fallback: show the previous image again
                     image2.classList.remove('about-image-inactive');
                     image2.classList.add('about-image-active');

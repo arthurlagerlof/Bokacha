@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bokachá</title>
     <link rel="icon" href="favicon.ico">
+    <link rel="preload" as="image" href="images/hero.avif" type="image/avif">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/home.css">
@@ -86,8 +87,16 @@
                         <div class="about-image">
                             <div class="image-carousel">
                                 <div class="image-stack">
-                                    <img src="images/about/bokacha-cafe.JPG" alt="About Bokachá" class="about-image-active" id="about-image-1">
-                                    <img src="images/about/bokacha-boba.jpg" alt="About Bokachá" class="about-image-inactive" id="about-image-2">
+                                    <picture class="about-image-active" id="about-image-1">
+                                        <source srcset="images/about/bokacha-cafe.avif" type="image/avif">
+                                        <source srcset="images/about/bokacha-cafe.webp" type="image/webp">
+                                        <img src="images/about/bokacha-cafe.JPG" alt="About Bokachá">
+                                    </picture>
+                                    <picture class="about-image-inactive" id="about-image-2">
+                                        <source srcset="images/about/bokacha-boba.avif" type="image/avif">
+                                        <source srcset="images/about/bokacha-boba.webp" type="image/webp">
+                                        <img src="images/about/bokacha-boba.jpg" alt="About Bokachá">
+                                    </picture>
                                 </div>
                                 <div class="carousel-dots">
                                     <span class="dot active" data-image="1"></span>
@@ -253,7 +262,6 @@
                     }
                 });
             } catch (error) {
-                console.error('Error loading hours:', error);
                 // Fallback to default hours if file fails to load
                 const hoursTable = document.getElementById('hours-table');
                 const defaultHours = [
